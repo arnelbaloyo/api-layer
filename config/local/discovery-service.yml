@@ -16,7 +16,9 @@ spring:
     output:
         ansi:
             enabled: always
-
+eureka:
+    server:
+        evictionIntervalTimerInMs: 10000000000
 ---
 spring.profiles: https
 

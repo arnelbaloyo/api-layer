@@ -9,7 +9,6 @@
  */
 package org.zowe.apiml.gateway.ribbon;
 
-import org.zowe.apiml.gateway.cache.ServiceCacheEvictor;
 import com.netflix.client.config.IClientConfig;
 import com.netflix.discovery.EurekaClient;
 import com.netflix.loadbalancer.*;
@@ -20,18 +19,21 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.cloud.netflix.ribbon.PropertiesFactory;
 import org.springframework.cloud.netflix.ribbon.RibbonClientName;
+import org.springframework.cloud.netflix.ribbon.RibbonLoadBalancedRetryFactory;
 import org.springframework.cloud.netflix.ribbon.ServerIntrospector;
 import org.springframework.cloud.netflix.ribbon.apache.RibbonLoadBalancingHttpClient;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.zowe.apiml.gateway.cache.ServiceCacheEvictor;
 
 /**
  * Configuration of client side load balancing with Ribbon
  */
 @Configuration
 @RequiredArgsConstructor
+//@EnableRetry
 public class GatewayRibbonConfig {
     private final PropertiesFactory propertiesFactory;
 
@@ -47,9 +49,12 @@ public class GatewayRibbonConfig {
         ServerIntrospector serverIntrospector,
         EurekaClient discoveryClient,
         CacheManager cacheManager,
-        ApplicationContext applicationContext
+        ApplicationContext applicationContext,
+        RibbonLoadBalancedRetryFactory retryFactory
     ) {
-        return new GatewayRibbonLoadBalancingHttpClientImpl(secureHttpClientWithoutKeystore, config, serverIntrospector, discoveryClient, cacheManager, applicationContext);
+        //return new GatewayRibbonLoadBalancingHttpClientImpl(secureHttpClientWithoutKeystore, config, serverIntrospector, discoveryClient, cacheManager, applicationContext);
+        //return new RetryableRibbonLoadBalancingHttpClient(secureHttpClientWithoutKeystore, config, serverIntrospector, retryFactory);
+        return new GatewayRetryableRibbonLoadBalancingHttpClient(secureHttpClientWithoutKeystore, config, serverIntrospector, retryFactory);
     }
 
     @Bean
