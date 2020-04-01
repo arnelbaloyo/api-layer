@@ -38,6 +38,14 @@ server:
         trustStoreType: PKCS12
 
 ribbon:
-    MaxAutoRetries: 1
-    MaxAutoRetriesNextServer: 1
+    MaxAutoRetries: 0
+    MaxAutoRetriesNextServer: 5
     OkToRetryOnAllOperations: true
+
+zuul:
+    retryable: true
+
+logging:
+    level:
+        org.springframework: DEBUG
+        com.netflix: DEBUG
