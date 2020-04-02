@@ -39,9 +39,7 @@ apiml:
 
         routes:
             -   gateway-url: "api/v1"
-                service-url: ${apiml.service.contextPath}/api/v1
-            -   gateway-url: "api/v1/api-doc" # Intentionally using old format to retrieve Api-doc for testing purposes
-                service-url: ${apiml.service.contextPath}/api-doc
+                service-url: "/"
         apiInfo:
             -   apiId: org.zowe.oes-app
                 version: 1.0.0

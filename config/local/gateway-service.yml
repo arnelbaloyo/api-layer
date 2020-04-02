@@ -41,11 +41,16 @@ ribbon:
     MaxAutoRetries: 0
     MaxAutoRetriesNextServer: 5
     OkToRetryOnAllOperations: true
-
+    IsSecure: true
 zuul:
     retryable: true
 
 logging:
     level:
-        org.springframework: DEBUG
+        org.springframework: INFO
         com.netflix: DEBUG
+        com.netflix.loadbalancer: DEBUG
+        com.netflix.loadbalancer.LoadBalancerContext: DEBUG
+        org.springframework.cloud.netflix.ribbon.apache.RetryableRibbonLoadBalancingHttpClient: DEBUG
+        com.netflix.loadbalancer.BaseLoadBalancer: DEBUG
+        org.springframework.retry: DEBUG
