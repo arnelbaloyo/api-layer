@@ -1,0 +1,25 @@
+
+buildscript {
+    repositories mavenRepositories
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'org.springframework.boot'
+
+dependencies {
+    compile(project(':onboarding-enabler-spring'))
+
+    compile libraries.spring_boot_starter_actuator
+    compile libraries.spring_boot_starter_web
+    testCompile libraries.spring_boot_starter_test
+
+
+    compileOnly libraries.lombok
+    annotationProcessor libraries.lombok
+
+}
