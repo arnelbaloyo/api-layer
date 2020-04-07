@@ -19,8 +19,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.cloud.netflix.ribbon.PropertiesFactory;
 import org.springframework.cloud.netflix.ribbon.RibbonClientName;
-import org.springframework.cloud.netflix.ribbon.RibbonLoadBalancedRetryFactory;
 import org.springframework.cloud.netflix.ribbon.ServerIntrospector;
+import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.cloud.netflix.ribbon.apache.RibbonLoadBalancingHttpClient;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -41,6 +41,12 @@ public class GatewayRibbonConfig {
     private String ribbonClientName = "client";
 
     @Bean
+    @Autowired
+    public CustomRetryFactory customRetryFactory(SpringClientFactory clientFactory) {
+        return new CustomRetryFactory(clientFactory);
+    }
+
+    @Bean
     @Primary
     @Autowired
     public RibbonLoadBalancingHttpClient ribbonLoadBalancingHttpClient(
@@ -50,11 +56,14 @@ public class GatewayRibbonConfig {
         EurekaClient discoveryClient,
         CacheManager cacheManager,
         ApplicationContext applicationContext,
-        RibbonLoadBalancedRetryFactory retryFactory
+        CustomRetryFactory customRetryFactory
     ) {
+
+        CustomClient client = new CustomClient(secureHttpClientWithoutKeystore);
+
         //return new GatewayRibbonLoadBalancingHttpClientImpl(secureHttpClientWithoutKeystore, config, serverIntrospector, discoveryClient, cacheManager, applicationContext);
         //return new RetryableRibbonLoadBalancingHttpClient(secureHttpClientWithoutKeystore, config, serverIntrospector, retryFactory);
-        return new GatewayRetryableRibbonLoadBalancingHttpClient(secureHttpClientWithoutKeystore, config, serverIntrospector, retryFactory);
+        return new CustomRetryableRibbonLoadBalancingHttpClient(client, config, serverIntrospector, customRetryFactory);
     }
 
     @Bean

@@ -20,9 +20,9 @@ import org.springframework.cloud.netflix.ribbon.apache.RetryableRibbonLoadBalanc
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class GatewayRetryableRibbonLoadBalancingHttpClient extends RetryableRibbonLoadBalancingHttpClient {
+public class CustomRetryableRibbonLoadBalancingHttpClient extends RetryableRibbonLoadBalancingHttpClient {
 
-    public GatewayRetryableRibbonLoadBalancingHttpClient(CloseableHttpClient delegate, IClientConfig config, ServerIntrospector serverIntrospector, LoadBalancedRetryFactory loadBalancedRetryFactory) {
+    public CustomRetryableRibbonLoadBalancingHttpClient(CloseableHttpClient delegate, IClientConfig config, ServerIntrospector serverIntrospector, LoadBalancedRetryFactory loadBalancedRetryFactory) {
         super(delegate, config, serverIntrospector, loadBalancedRetryFactory);
     }
 

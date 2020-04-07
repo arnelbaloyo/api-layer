@@ -9,9 +9,11 @@
  */
 package org.zowe.apiml.gateway.ribbon;
 
-import org.zowe.apiml.gateway.cache.ServiceCacheEvictor;
 import com.netflix.client.config.IClientConfig;
 import com.netflix.loadbalancer.*;
+import com.netflix.niws.loadbalancer.DiscoveryEnabledServer;
+import com.netflix.zuul.context.RequestContext;
+import org.zowe.apiml.gateway.cache.ServiceCacheEvictor;
 
 /**
  * Custom implementation of load balancer. This implementation register on creating into ServiceCacheEvictor. It allows
@@ -44,4 +46,18 @@ public class ApimlZoneAwareLoadBalancer<T extends Server> extends ZoneAwareLoadB
         updateListOfServers();
     }
 
+    @Override
+    public Server chooseServer(Object key) {
+        Server server = super.chooseServer(key);
+
+        if (server instanceof DiscoveryEnabledServer) {
+            RequestContext context = RequestContext.getCurrentContext();
+            context.set("zoweRoutedInstanceInfo", ((DiscoveryEnabledServer) server).getInstanceInfo());
+        } else {
+            throw new RuntimeException("Something is not right");
+        }
+
+
+        return server;
+    }
 }
