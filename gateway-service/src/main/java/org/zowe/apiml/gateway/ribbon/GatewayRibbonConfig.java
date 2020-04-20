@@ -19,6 +19,7 @@ import org.springframework.cloud.client.loadbalancer.LoadBalancedRetryFactory;
 import org.springframework.cloud.netflix.ribbon.PropertiesFactory;
 import org.springframework.cloud.netflix.ribbon.RibbonClientName;
 import org.springframework.cloud.netflix.ribbon.ServerIntrospector;
+import org.springframework.cloud.netflix.ribbon.SpringClientFactory;
 import org.springframework.cloud.netflix.ribbon.apache.RetryableRibbonLoadBalancingHttpClient;
 import org.springframework.cloud.netflix.ribbon.apache.RibbonLoadBalancingHttpClient;
 import org.springframework.context.annotation.Bean;
@@ -44,10 +45,13 @@ public class GatewayRibbonConfig {
         @Qualifier("HttpClientProxy") CloseableHttpClient httpClientProxy,
         IClientConfig config,
         ServerIntrospector serverIntrospector,
-        LoadBalancedRetryFactory retryFactory
+        LoadBalancedRetryFactory retryFactory, // TODO this can create listener and break retry on exception
+        SpringClientFactory springClientFactory
     ) {
+        SuperRetryFactory superRetryFactory = new SuperRetryFactory(springClientFactory);
+
         return new RetryableRibbonLoadBalancingHttpClient(
-            httpClientProxy, config, serverIntrospector, retryFactory);
+            httpClientProxy, config, serverIntrospector, superRetryFactory);
     }
 
     @Bean
