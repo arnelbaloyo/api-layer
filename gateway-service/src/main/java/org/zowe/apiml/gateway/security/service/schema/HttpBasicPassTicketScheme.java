@@ -14,7 +14,10 @@ import com.netflix.zuul.context.RequestContext;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
+import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
+import org.apache.http.HttpRequest;
+import org.apache.http.message.BasicHeader;
 import org.springframework.stereotype.Component;
 import org.zowe.apiml.gateway.security.service.PassTicketException;
 import org.zowe.apiml.passticket.IRRPassTicketGenerationException;
@@ -25,7 +28,9 @@ import org.zowe.apiml.security.common.config.AuthConfigurationProperties;
 import org.zowe.apiml.security.common.token.QueryResponse;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.function.Supplier;
 
 /**
@@ -81,6 +86,16 @@ public class HttpBasicPassTicketScheme implements AbstractAuthenticationScheme {
         public void apply(InstanceInfo instanceInfo) {
             final RequestContext context = RequestContext.getCurrentContext();
             context.addZuulRequestHeader(HttpHeaders.AUTHORIZATION, authorizationValue);
+        }
+
+        @Override
+        public void smapply(HttpRequest request) {
+            List<Header> headers = new ArrayList<>();
+            for(int i=0; i < request.getAllHeaders().length; i++) {
+                headers.add(request.getAllHeaders()[i]);
+            }
+            headers.add(new BasicHeader(HttpHeaders.AUTHORIZATION, authorizationValue));
+            request.setHeaders(headers.toArray(new Header[] {}));
         }
 
         @Override

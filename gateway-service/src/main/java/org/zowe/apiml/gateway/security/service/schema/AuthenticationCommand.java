@@ -10,6 +10,7 @@
 package org.zowe.apiml.gateway.security.service.schema;
 
 import com.netflix.appinfo.InstanceInfo;
+import org.apache.http.HttpRequest;
 import org.zowe.apiml.cache.EntryExpiration;
 
 import java.io.Serializable;
@@ -34,6 +35,11 @@ public abstract class AuthenticationCommand implements EntryExpiration, Serializ
         }
 
         @Override
+        public void smapply(HttpRequest request) {
+            // do nothing : )
+        }
+
+        @Override
         public boolean isExpired() {
             return false;
         }
@@ -52,6 +58,8 @@ public abstract class AuthenticationCommand implements EntryExpiration, Serializ
      * @param instanceInfo Specific instanceIf if it is needed
      */
     public abstract void apply(InstanceInfo instanceInfo);
+
+    public abstract void smapply(HttpRequest request);
 
     /**
      * This method identify if for this authentication command, schema is required to be logged. Main purpose is

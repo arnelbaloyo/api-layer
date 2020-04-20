@@ -11,6 +11,7 @@ package org.zowe.apiml.gateway.security.service.schema;
 
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.zuul.context.RequestContext;
+import org.apache.http.HttpRequest;
 import org.springframework.stereotype.Component;
 import org.zowe.apiml.security.common.auth.Authentication;
 import org.zowe.apiml.security.common.auth.AuthenticationScheme;
@@ -37,6 +38,12 @@ public class ByPassScheme implements AbstractAuthenticationScheme {
 
         @Override
         public void apply(InstanceInfo instanceInfo) {
+            RequestContext.getCurrentContext().put(AUTHENTICATION_SCHEME_BY_PASS_KEY, Boolean.TRUE);
+        }
+
+        @Override
+        public void smapply(HttpRequest request) {
+            // TODO this might not be needed
             RequestContext.getCurrentContext().put(AUTHENTICATION_SCHEME_BY_PASS_KEY, Boolean.TRUE);
         }
 

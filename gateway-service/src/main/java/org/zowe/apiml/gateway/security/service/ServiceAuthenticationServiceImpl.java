@@ -16,6 +16,7 @@ import com.netflix.loadbalancer.reactive.ExecutionListener;
 import com.netflix.zuul.context.RequestContext;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.HttpRequest;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -185,6 +186,11 @@ public class ServiceAuthenticationServiceImpl implements ServiceAuthenticationSe
         }
 
         @Override
+        public void smapply(HttpRequest request) {
+            throw new UnsupportedOperationException("This should not be called");
+        }
+
+        @Override
         public boolean isExpired() {
             return false;
         }
@@ -207,6 +213,11 @@ public class ServiceAuthenticationServiceImpl implements ServiceAuthenticationSe
         @Override
         public void apply(InstanceInfo instanceInfo) {
             RequestContext.getCurrentContext().put(AUTHENTICATION_COMMAND_KEY, universal);
+        }
+
+        @Override
+        public void smapply(HttpRequest request) {
+            throw new UnsupportedOperationException("This should not be called");
         }
 
         @Override
